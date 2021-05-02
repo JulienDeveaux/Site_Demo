@@ -1,0 +1,2 @@
+transparence : convert carTest.png -fuzz 5% -transparent white carTest2.png
+image -> redimensionner l'image ->taille en pixels -> filtre -> voisin le plus proche
