@@ -3,18 +3,64 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Phaser3Test</title>
+  <title>MainPage</title>
 
   <link rel="manifest" href="site.webmanifest">
   <link rel="icon" href="favicon.ico">
-
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
-  <script src="js/phaser.js" ></script>
 </head>
 
 <body>
-  <h1>No Internet Dino Game</h1>
-  <script src="js/Dino_Game.js"></script>
+  <nav>
+    <div class="logo"><h4>Index</h4></div>
+    <ul class="nav-links">
+      <li><a href="Morpion.html">Morpion</a></li>
+      <li><a href="Game.html">Jeu Dinosaure</a></li>
+      <li><a href="index.html">Autre</a></li>
+    </ul>
+    <div class="MenuBar">
+      <div class="l1"></div>
+      <div class="l2"></div>
+      <div class="l3"></div>
+    </div>
+  </nav>
+  <div id="horloge"></div>
+<script>
+  const navSlide = () => {
+    const navBar = document.querySelector('.MenuBar');
+    const nav = document.querySelector('.nav-links');
+    const navLinks = document.querySelectorAll('.nav-links li');
+
+    navBar.addEventListener('click', () => {
+      nav.classList.toggle('nav-active');
+
+      navBar.classList.toggle('toggle');
+
+      navLinks.forEach((link, index) => {
+        if(link.style.animation) {
+          link.style.animation = '';
+        } else {
+          link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.5}s`;
+        }
+      });
+    });
+  }
+  function horloge() {
+    var date = new Date();
+    var h = date.getHours();
+    var m = date.getMinutes();
+    var s = date.getSeconds();
+    h = ("0" + h).slice(-2);
+    m = ("0" + m).slice(-2);
+    s = ("0" + s).slice(-2);
+    document.getElementById('horloge').innerHTML = h + " : " + m + " : " + s;
+    var t = setTimeout(horloge, 500);
+  }
+
+  navSlide();
+  horloge();
+</script>
 </body>
 
 </html>
