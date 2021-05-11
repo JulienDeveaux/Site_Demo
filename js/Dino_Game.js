@@ -24,7 +24,8 @@ var posAvEcran;
 var tileSprite;
 var emiterSmoke1;
 var emiterSmoke2;
-var backgroundGeneral = document.getElementById('body');
+
+var backgroundGeneral = document.getElementById('body');    // Remove background image of the page
 backgroundGeneral.style.background = 'none';
 
 function preload () {
