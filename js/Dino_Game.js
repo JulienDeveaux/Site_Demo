@@ -24,6 +24,8 @@ var posAvEcran;
 var tileSprite;
 var emiterSmoke1;
 var emiterSmoke2;
+var backgroundGeneral = document.getElementById('body');
+backgroundGeneral.style.background = 'none';
 
 function preload () {
   //this.load.setBaseURL('https://labs.phaser.io/assets');   // Append url avant les assets
@@ -137,7 +139,7 @@ function create () {
     vitesse = 1;
   });
 
-  this.cameras.main.startFollow(car).setFollowOffset(0, 250);   //suivi caméra
+  //this.cameras.main.startFollow(car).setFollowOffset(0, 250);   //suivi caméra
   //this.cameras.main.focusOnXY(car.x, 20);
 
   emiterSmoke1.startFollow(car);

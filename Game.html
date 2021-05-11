@@ -8,13 +8,48 @@
   <link rel="manifest" href="site.webmanifest">
   <link rel="icon" href="favicon.ico">
 
-  <link rel="stylesheet" href="css/phaser.css">
+  <link rel="stylesheet" href="css/main.css">
   <script src="js/phaser.js" ></script>
 </head>
 
-<body>
-<h1><a href="index.html">Random Game</a></h1>
+<body id="body">
+<nav>
+  <div class="logo"><h4>Random Game</h4></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Index</a></li>
+    <li><a href="Morpion.html">Morpion</a></li>
+    <li><a href="index.html">Autre</a></li>
+  </ul>
+  <div class="MenuBar">
+    <div class="l1"></div>
+    <div class="l2"></div>
+    <div class="l3"></div>
+  </div>
+</nav>
 <script src="js/Dino_Game.js"></script>
+<script>
+  const navSlide = () => {
+    const navBar = document.querySelector('.MenuBar');
+    const nav = document.querySelector('.nav-links');
+    const navLinks = document.querySelectorAll('.nav-links li');
+
+    navBar.addEventListener('click', () => {
+      nav.classList.toggle('nav-active');
+
+      navBar.classList.toggle('toggle');
+
+      navLinks.forEach((link, index) => {
+        if(link.style.animation) {
+          link.style.animation = '';
+        } else {
+          link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.5}s`;
+        }
+      });
+    });
+  }
+
+  navSlide();
+</script>
 </body>
 
 </html>
