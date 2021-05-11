@@ -5,9 +5,12 @@ var plateau = [
   ['', '', ''],
   ['', '', '']
 ];
+
 if (canvas.getContext) {
   document.getElementById('tour').innerHTML = "X";
   ctx = canvas.getContext('2d');
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   var mouseX = 0;
   var mouseY = 0;
 
@@ -81,16 +84,16 @@ function play() {
   }
   for(var i = 0; i < 3; i++) {
     if(plateau[0][i] === plateau[1][i] && plateau[1][i] === plateau[2][i] && plateau[0][i] !== '') {    // vérification verticale
-      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[0][i] + "</br><a href='Morpion.html'>Recommencer ?</a>";
+      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[0][i] + "</br><a id='restartlink' href='Morpion.html'>Recommencer ?</a>";
     }
     if(plateau[i][0] === plateau[i][1] && plateau[i][1] === plateau[i][2] && plateau[i][0] !== '') {    // vérification horizontale
-      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[i][0] + "</br><a href='Morpion.html'>Recommencer ?</a>";
+      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[i][0] + "</br><a id='restartlink' href='Morpion.html'>Recommencer ?</a>";
     }
     if(plateau[0][2] === plateau[1][1] && plateau[1][1] === plateau[2][0] && plateau[1][1] !== '') {                            // vérification en diagonale démarrant en haut à droite
-      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[1][1] + "</br><a href='Morpion.html'>Recommencer ?</a>";
+      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[1][1] + "</br><a id='restartlink' href='Morpion.html'>Recommencer ?</a>";
     }
     if(plateau[0][0] === plateau[1][1] && plateau[1][1] === plateau[2][2] && plateau[1][1] !== '') {                            // vérification en diagonale démarrant en haut à gauche
-      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[1][1] + "</br><a href='Morpion.html'>Recommencer ?</a>";
+      document.getElementById('gagnant').innerHTML = "gagnant : " + plateau[1][1] + "</br><a id='restartlink' href='Morpion.html'>Recommencer ?</a>";
     }
   }
 }

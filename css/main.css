@@ -123,3 +123,20 @@ nav {
   text-align: center;
   margin-top: 25%;
 }
+
+p {
+  text-align: center;
+  color: rgb(226, 226, 226);
+}
+
+#restartlink {
+  color: darkorange;
+}
+
+canvas {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
