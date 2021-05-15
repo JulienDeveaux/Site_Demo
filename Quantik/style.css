@@ -88,31 +88,6 @@ nav {
   }
 }
 
-@media (pointer: coarse) {
-  body {
-    overflow-x: hidden;
-  }
-  .nav-links {
-    position: absolute;
-    right: 0px;
-    height: 92vh;
-    top: 8vh;
-    background-color: #5d4954;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 30%;
-    transform: translateX(100%);
-    transition: transform 0.5s ease-in;
-  }
-  .nav-links li {
-    opacity: 0;
-  }
-  .MenuBar {
-    display: block;
-  }
-}
-
 .nav-active {
   transform: translateX(0%);
 }
@@ -140,35 +115,107 @@ nav {
   transform: rotate(45deg) translate(-5px, -6px);
 }
 
-#horloge {
-  width: 100%;
-  position: absolute;
-  font-size: 9vw;
-  text: rgb(226, 226, 226);
-  text-align: center;
-  margin-top: 25%;
+td
+{
+	border: 2px solid black;
+	width: 60px;
+	height: 60px;
 }
 
-p {
-  text-align: center;
-  color: rgb(226, 226, 226);
+.button
+{
+	border-radius: 4px;
+	border: 1px solid green;
+	color: black;
+	padding: 5px 10px;
 }
 
-#restartlink {
-  color: darkorange;
+.buttonactive
+{
+	border-color: green;
+	padding: 14px 28px;
+	border-radius: 15px;
+	border-style: solid;
+	border-width: 5px;
 }
 
-canvas {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+.buttondesactive
+{
+	background:url(CroixReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
 }
 
-#my-game {
-  width: 800px;
-  height: 600px;
-  margin: 0 auto;
-  border: 1px solid black;
+.plateau
+{
+	background-color: lightgreen;
+	width: 60px;
+	height: 60px;
+}
+
+.plateauinactif
+{
+	background-color: beige;
+	width: 60px;
+	height: 60px;
+}
+
+.forme10 /* cubeBlanc */
+{
+	background:url(RenardBlancReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme20 /* cone */
+{
+	background:url(DemonBlancReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme30 /* cylindre */
+{
+	background:url(ChatBlancReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme40 /* sphere */
+{
+	background:url(BoxBoxBoyBlancReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme11 /* cubeNoir */
+{
+	background:url(RenardNoirReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme21 /* cone */
+{
+	background:url(DemonNoirReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme31 /* cylindre */
+{
+	background:url(ChatNoirReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.forme41 /* sphere */
+{
+	background:url(BoxBoyNoirReduit.png) no-repeat;
+	width: 60px;
+	height: 60px;
+}
+
+.quantik {
+  margin: 10px;
 }
