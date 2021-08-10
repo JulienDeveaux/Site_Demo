@@ -29,7 +29,8 @@ class QuantikUIGenerator
     <ul class=\"nav-links\">
       <li><a href=\"../index.html\">Accueil</a></li>
       <li><a href=\"../Morpion.html\">Morpion</a></li>
-      <li><a href=\"../Game.html\">Jeu Dinosaure</a></li>
+      <li><a href=\"../Game.html\" style=\"color: red\">Jeu Dinosaure</a></li>
+      <li><a href=\"../edt.html\">Calendrier</a></li>
     </ul>
     <div class=\"MenuBar\">
       <div class=\"l1\"></div>
