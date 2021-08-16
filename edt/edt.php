@@ -57,61 +57,15 @@
     let event = [
       <?php
       include 'basePDOCalendrier.php';
-      $today = getdate();
-      $date = date_create($today["year"] ."-". $today["mon"] ."-". $today["mday"]);
-      if($today["wday"] == 2) {
-        date_sub($date,date_interval_create_from_date_string("2 day"));
-      } else if($today["wday"] == 3) {
-        date_sub($date,date_interval_create_from_date_string("3 days"));
-      } else if($today["wday"] == 4) {
-        date_sub($date,date_interval_create_from_date_string("4 days"));
-      } else if($today["wday"] == 5) {
-        date_sub($date,date_interval_create_from_date_string("5 days"));
-      } else if($today["wday"] == 6) {
-        date_sub($date,date_interval_create_from_date_string("6 days"));
-      } else if($today["wday"] == 7) {
-        date_sub($date,date_interval_create_from_date_string("7 days"));
-      }
-      $lundi = date_format($date,"Y-m-d");
-      date_add($date,date_interval_create_from_date_string("1 day"));
-      $mardi = date_format($date,"Y-m-d");
-      date_add($date,date_interval_create_from_date_string("1 day"));
-      $mercredi = date_format($date,"Y-m-d");
-      date_add($date,date_interval_create_from_date_string("1 day"));
-      $jeudi = date_format($date,"Y-m-d");
-      date_add($date,date_interval_create_from_date_string("1 day"));
-      $vendredi = date_format($date,"Y-m-d");
-      date_add($date,date_interval_create_from_date_string("1 day"));
-      $samedi = date_format($date,"Y-m-d");
-      date_sub($date,date_interval_create_from_date_string("6 day"));
-      $dimanche = date_format($date,"Y-m-d");
-
-      $events = Calendrier::initcalendrier_jour($lundi);
-      $finalarray[0] = $events;
-      $events = Calendrier::initcalendrier_jour($mardi);
-      $finalarray[1] = $events;
-      $events = Calendrier::initcalendrier_jour($mercredi);
-      $finalarray[2] = $events;
-      $events = Calendrier::initcalendrier_jour($jeudi);
-      $finalarray[3] = $events;
-      $events = Calendrier::initcalendrier_jour($vendredi);
-      $finalarray[4] = $events;
-      $events = Calendrier::initcalendrier_jour($samedi);
-      $finalarray[5] = $events;
-      $events = Calendrier::initcalendrier_jour($dimanche);
-      $finalarray[6] = $events;
-      for($j = 0; $j < sizeof($finalarray); $j++) {
-        for ($i = 0; $i < sizeof($finalarray[$j]); $i++) {
-          if (sizeof($finalarray[$j]) != 0) {
+      $events = calendrier::getAll();
+        for ($i = 0; $i < sizeof($events); $i++) {
             echo "{
-            \"title\": \"" . $finalarray[$j][$i]->gettitreEvent() . "\",
-            \"start\": \"" . $finalarray[$j][$i]->getheuredebut() . "\",
-            \"end\": \"" . $finalarray[$j][$i]->getheurefin() . "\",
-            \"allDay\": " . $finalarray[$j][$i]->getisfullday() . "
+            \"title\": \"" . $events[$i]->gettitreEvent() . "\",
+            \"start\": \"" . $events[$i]->getheuredebut() . "\",
+            \"end\": \"" . $events[$i]->getheurefin() . "\",
+            \"allDay\": " . $events[$i]->getisfullday() . "
           },";
-          }
         }
-      }
       ?>
 
     ];
@@ -121,6 +75,9 @@
       weekNumbers: true,
       nowIndicator: true,
       editable: true,
+      eventStartEditable: true,
+      eventResizableFromStart: true,
+      eventDurationEditable: true,
       headerToolbar: {
         left: 'prev, next, today',
         center: 'title',
@@ -132,15 +89,32 @@
         week: 'Semaine',
       },
       events: event,
-      eventDrop: (infos) => {
+      eventDragStop: (infos) => {
         if(!confirm("Etes vous sur de vouloir déplacer cet évènement ?")) {
           infos.revert();
         }
       }
+      /*eventClick: function(arg) {
+        // opens events in a popup window
+        window.open(arg.event.url, '_blank', 'width=700,height=600');
+        // prevents current tab from navigating
+        arg.jsEvent.preventDefault();
+      }*/
       //dateClick: function (info) {console.log('click ' + info.dateStr)} // fire quand on click sur une date
     });
     calendar.setOption('locale', 'fr');
     calendar.render();
+
+    //ajout d'un élément après render
+    event.push({
+      "title": "Mon test",
+      "start": "2021-08-19 10:00:00",
+      "end": "2021-08-19 11:00:00",
+      "allDay": false
+    });
+    calendar.removeAllEvents();
+    calendar.removeAllEventSources();
+    calendar.addEventSource(event);
   });
 </script>
 </body>
