@@ -52,36 +52,65 @@
   navSlide();
 </script>
 <div id="calendar"></div>
-<?php
-include 'basePDOEvent.php';
-//include 'basePDOJours.php';
-$events = Event::getAll();
-for($i = 0; $i < sizeof($events); $i++) {
-  echo $events[$i];
-}
-?>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    /*let event = [{
-      "title": "mon titre",
-      "start": "2021-08-11 10:00:00",       // select * from jours where datejour = '11-08-2021' => idjour 2460 datejour 11-08-2021
-      "end": "2021-08-11 11:00:00",         // INSERT INTO event VALUES (2460, 'Mon Titre', '2021-08-11 10:00:00', '2021-08-11 11:00:00', false);
-      "backgroundColor": "#839c49",         // select * from event natural join jours where datejour = '11-08-2021'
-      "allDay": true
-    }, {
-      "title": "mon titre2",
-      "start": "2021-08-11 11:00:00",
-      "end": "2021-08-11 12:00:00"
-    }];*/
     let event = [
       <?php
-      $events = Event::getAll();
-      for($i = 0; $i < sizeof($events); $i++) {
-        echo "{
-        \"title\": \"" . $events[$i]->gettitreevent() . "\",
-        \"start\": \"" . $events[$i]->getheuredebut() . "\",
-        \"end\": \"" . $events[$i]->getheurefin() . "\",
-        }";
+      include 'basePDOCalendrier.php';
+      $today = getdate();
+      $date = date_create($today["year"] ."-". $today["mon"] ."-". $today["mday"]);
+      if($today["wday"] == 2) {
+        date_sub($date,date_interval_create_from_date_string("2 day"));
+      } else if($today["wday"] == 3) {
+        date_sub($date,date_interval_create_from_date_string("3 days"));
+      } else if($today["wday"] == 4) {
+        date_sub($date,date_interval_create_from_date_string("4 days"));
+      } else if($today["wday"] == 5) {
+        date_sub($date,date_interval_create_from_date_string("5 days"));
+      } else if($today["wday"] == 6) {
+        date_sub($date,date_interval_create_from_date_string("6 days"));
+      } else if($today["wday"] == 7) {
+        date_sub($date,date_interval_create_from_date_string("7 days"));
+      }
+      $lundi = date_format($date,"Y-m-d");
+      date_add($date,date_interval_create_from_date_string("1 day"));
+      $mardi = date_format($date,"Y-m-d");
+      date_add($date,date_interval_create_from_date_string("1 day"));
+      $mercredi = date_format($date,"Y-m-d");
+      date_add($date,date_interval_create_from_date_string("1 day"));
+      $jeudi = date_format($date,"Y-m-d");
+      date_add($date,date_interval_create_from_date_string("1 day"));
+      $vendredi = date_format($date,"Y-m-d");
+      date_add($date,date_interval_create_from_date_string("1 day"));
+      $samedi = date_format($date,"Y-m-d");
+      date_sub($date,date_interval_create_from_date_string("6 day"));
+      $dimanche = date_format($date,"Y-m-d");
+
+      $events = Calendrier::initcalendrier_jour($lundi);
+      $finalarray[0] = $events;
+      $events = Calendrier::initcalendrier_jour($mardi);
+      $finalarray[1] = $events;
+      $events = Calendrier::initcalendrier_jour($mercredi);
+      $finalarray[2] = $events;
+      $events = Calendrier::initcalendrier_jour($jeudi);
+      $finalarray[3] = $events;
+      $events = Calendrier::initcalendrier_jour($vendredi);
+      $finalarray[4] = $events;
+      $events = Calendrier::initcalendrier_jour($samedi);
+      $finalarray[5] = $events;
+      $events = Calendrier::initcalendrier_jour($dimanche);
+      $finalarray[6] = $events;
+      for($j = 0; $j < sizeof($finalarray); $j++) {
+        for ($i = 0; $i < sizeof($finalarray[$j]); $i++) {
+          if (sizeof($finalarray[$j]) != 0) {
+            echo "{
+            \"title\": \"" . $finalarray[$j][$i]->gettitreEvent() . "\",
+            \"start\": \"" . $finalarray[$j][$i]->getheuredebut() . "\",
+            \"end\": \"" . $finalarray[$j][$i]->getheurefin() . "\",
+            \"allDay\": " . $finalarray[$j][$i]->getisfullday() . "
+          },";
+          }
+        }
       }
       ?>
 
@@ -113,33 +142,6 @@ for($i = 0; $i < sizeof($events); $i++) {
     calendar.setOption('locale', 'fr');
     calendar.render();
   });
-</script>
-<script>
-  let res = "";
-  let annee = 2015;
-  let mois = 1;
-  let jour = 1;
-  let moistxt = "";
-  let jourtxt = "";
-  let serial = 1
-  for(annee; annee < 2040; annee++) {
-    for(mois = 1; mois < 13; mois++) {
-      for(jour = 1; jour < 32; jour++) {
-        if(mois < 10) {
-          moistxt = "" + 0 + mois;
-        } else {
-          moistxt = mois;
-        }
-        if(jour < 10) {
-          jourtxt = "" + 0 + jour;
-        } else {
-          jourtxt = jour;
-        }
-        res += "INSERT INTO jours VALUES(nextval('jours_idjour_seq'::regclass), '" + jourtxt + "-" + moistxt + "-" + annee + "');";
-      }
-    }
-  }
-  console.log(res);
 </script>
 </body>
 

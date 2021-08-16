@@ -1,5 +1,5 @@
 <?php
-class Event {
+class Calendrier {
 
   /**
    * gestion statique des accès SGBD
@@ -57,35 +57,35 @@ class Event {
    * instantiation de self::$_pdos_selectAll
    */
   public static function initPDOS_selectAll() {
-    self::$_pdos_selectAll = self::$_pdo->prepare('SELECT * FROM event ORDER BY idjourassocie');
+    self::$_pdos_selectAll = self::$_pdo->prepare('SELECT * FROM calendrier ORDER BY heureDebut');
   }
 
   /**
    * méthode statique instanciant Categorie::$_pdo_select
    */
   public static function initPDOS_select_jour() {
-    self::$_pdos_select = self::$_pdo->prepare('SELECT * FROM event WHERE idjourassocie= :idjourassocie');
+    self::$_pdos_select = self::$_pdo->prepare("SELECT * FROM calendrier WHERE heuredebut like :jour");
   }
 
   /**
    * méthode statique instanciant Categorie::$_pdo_update
    */
   public static function initPDOS_update() {
-    self::$_pdos_update =  self::$_pdo->prepare('UPDATE event SET idjourassocie=:idjourassocie, titreevent=:titre, heuredebut=:heuredebut, heurefin=:heurefin, isfullday=:isfullday, color=:color WHERE idjourassocie = :idjourassocie');
+    self::$_pdos_update =  self::$_pdo->prepare('UPDATE calendrier SET titreevent=:titre, heuredebut=:heuredebut, heurefin=:heurefin, isfullday=:isfullday, color=:color WHERE titreevent=:titre AND heuredebut=:heuredebut AND heurefin=:heurefin');
   }
 
   /**
    * méthode statique instanciant Categorie::$_pdo_insert
    */
   public static function initPDOS_insert() {
-    self::$_pdos_insert = self::$_pdo->prepare('INSERT INTO event VALUES(:idjourassocie,:titre,:heuredebut,:heurefin,;isfullday,:color)');
+    self::$_pdos_insert = self::$_pdo->prepare('INSERT INTO calendrier VALUES(:titre,:heuredebut,:heurefin,;isfullday,:color)');
   }
 
   /**
    * méthode statique instanciant fonction_prix::$_pdo_delete
    */
   public static function initPDOS_delete() {
-    self::$_pdos_delete = self::$_pdo->prepare('DELETE FROM event WHERE idjourassocie=:idjourassocie AND titreevent:=titre AND heuredebut:=heuredebut AND heurefin:=heurefin AND isfullday:=isfullday AND color:=color');
+    self::$_pdos_delete = self::$_pdo->prepare('DELETE FROM calendrier WHERE titreevent:=titre AND heuredebut:=heuredebut AND heurefin:=heurefin AND isfullday:=isfullday AND color:=color');
   }
 
   /**
@@ -95,14 +95,8 @@ class Event {
   public static function initPDOS_count() {
     if (!isset(self::$_pdo))
       self::initPDO();
-    self::$_pdos_count = self::$_pdo->prepare('SELECT COUNT(*) FROM event');
+    self::$_pdos_count = self::$_pdo->prepare('SELECT COUNT(*) FROM calendrier');
   }
-
-  /**
-   * identifiant de la Categorie
-   * @var int
-   */
-  protected $idjourassocie;
 
   /**
    * titre de la catégorie
@@ -139,20 +133,6 @@ class Event {
    * @var bool
    */
   private $nouveau = TRUE;
-
-  /**
-   * @return $this->idjourassocie
-   */
-  public function getidjourassocie() : int {
-    return $this->idjourassocie;
-  }
-
-  /**
-   * @param $idjourassocie
-   */
-  public function setidjourassocie($idjourassocie): void {
-    $this->idjourassocie=$idjourassocie;
-  }
 
   /**
    * @return $this->titreevent
@@ -199,7 +179,12 @@ class Event {
   /**
    * @return $this->heuredebut
    */
-  public function getisfullday() : bool {
+  public function getisfullday() : string {
+    if($this->isfullday != 1) {
+      $this->isfullday = "false";
+    } else {
+      $this->isfullday = "true";
+    }
     return $this->isfullday;
   }
 
@@ -249,7 +234,7 @@ class Event {
         self::initPDOS_selectAll();
       self::$_pdos_selectAll->execute();
       // résultat du fetch dans une instance de Categorie
-      $lesCategories = self::$_pdos_selectAll->fetchAll(PDO::FETCH_CLASS,'Event');
+      $lesCategories = self::$_pdos_selectAll->fetchAll(PDO::FETCH_CLASS,'Calendrier');
       return $lesCategories;
     }
     catch (PDOException $e) {
@@ -263,20 +248,17 @@ class Event {
    * @param $id_jour un identifiant de Categorie
    * @return l'instance de Categorie associée à $id_ceremonie
    */
-  public static function initCategorie_jour($id_jour) {
+  public static function initcalendrier_jour($jour) {
     try {
       if (!isset(self::$_pdo))
         self::initPDO();
       if (!isset(self::$_pdos_select))
         self::initPDOS_select_jour();
-      self::$_pdos_select->bindValue(':idjourassocie',$id_jour);
+      $jour = $jour."%";
+      self::$_pdos_select->bindValue(':jour',$jour);
       self::$_pdos_select->execute();
-      // résultat du fetch dans une instance de Categorie
-      $lc = self::$_pdos_select->fetchObject('Event');
-      if (isset($lc) && ! empty($lc))
-        $lc->setNouveau(FALSE);
-      if (empty($lc))
-        throw new Exception("Jour $id_jour inexistant dans la table Event.\n");
+      // résultat du fetch dans une instance de calendrier
+      $lc = self::$_pdos_select->fetchAll(PDO::FETCH_CLASS,'Calendrier');
       return $lc;
     }
     catch (PDOException $e) {
@@ -296,7 +278,6 @@ class Event {
       if (!isset(self::$_pdos_insert)) {
         self::initPDOS_insert();
       }
-      self::$_pdos_insert->bindParam(':idjourassocie', $this->idjourassocie);
       self::$_pdos_insert->bindParam(':titre', $this->titreevent);
       self::$_pdos_insert->bindParam(':heuredebut', $this->heuredebut);
       self::$_pdos_insert->bindParam(':heurefin', $this->heurefin);
@@ -308,7 +289,6 @@ class Event {
     else {
       if (!isset(self::$_pdos_update))
         self::initPDOS_update();
-      self::$_pdos_update->bindParam(':idjourassocie', $this->idjourassocie);
       self::$_pdos_update->bindParam(':titre', $this->titreevent);
       self::$_pdos_update->bindParam(':heuredebut', $this->heuredebut);
       self::$_pdos_insert->bindParam(':heurefin', $this->heurefin);
@@ -329,7 +309,6 @@ class Event {
       if (!isset(self::$_pdos_delete)) {
         self::initPDOS_delete();
       }
-      self::$_pdos_delete->bindParam(':idjourassocie', $this->idjourassocie);
       self::$_pdos_delete->bindParam(':titre', $this->titreevent);
       self::$_pdos_delete->bindParam(':heuredebut', $this->heuredebut);
       self::$_pdos_insert->bindParam(':heurefin', $this->heurefin);
@@ -343,7 +322,7 @@ class Event {
   /**
    * nombre d'objets disponible dans la table
    */
-  public static function getNbEvent() : int {
+  public static function getNbcalendrier() : int {
     if (!isset(self::$_pdos_count)) {
       self::initPDOS_count();
     }
@@ -356,8 +335,7 @@ class Event {
    * affichage élémentaire
    */
   public function __toString() : string {
-    $ch = "<table border='1'><tr><th>idjourassocie</th><th>titreevent</th><th>heuredebut</th><th>heurefin</th><th>isfullday</th><th>color</th><th>nouveau</th></tr><tr>";
-    $ch.= "<td>".$this->idjourassocie."</td>";
+    $ch = "<table border='1'><tr><th>titreevent</th><th>heuredebut</th><th>heurefin</th><th>isfullday</th><th>color</th><th>nouveau</th></tr><tr>";
     $ch.= "<td>".$this->titreevent."</td>";
     $ch.= "<td>".$this->heuredebut."</td>";
     $ch.= "<td>".$this->heurefin."</td>";
