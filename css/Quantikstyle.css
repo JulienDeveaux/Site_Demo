@@ -141,7 +141,7 @@ td
 
 .buttondesactive
 {
-	background:url(CroixReduit.png) no-repeat;
+	background:url(../img/CroixReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
@@ -162,56 +162,56 @@ td
 
 .forme10 /* cubeBlanc */
 {
-	background:url(RenardBlancReduit.png) no-repeat;
+	background:url(../img/RenardBlancReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme20 /* cone */
 {
-	background:url(DemonBlancReduit.png) no-repeat;
+	background:url(../img/DemonBlancReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme30 /* cylindre */
 {
-	background:url(ChatBlancReduit.png) no-repeat;
+	background:url(../img/ChatBlancReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme40 /* sphere */
 {
-	background:url(BoxBoxBoyBlancReduit.png) no-repeat;
+	background:url(../img/BoxBoxBoyBlancReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme11 /* cubeNoir */
 {
-	background:url(RenardNoirReduit.png) no-repeat;
+	background:url(../img/RenardNoirReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme21 /* cone */
 {
-	background:url(DemonNoirReduit.png) no-repeat;
+	background:url(../img/DemonNoirReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme31 /* cylindre */
 {
-	background:url(ChatNoirReduit.png) no-repeat;
+	background:url(../img/ChatNoirReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }
 
 .forme41 /* sphere */
 {
-	background:url(BoxBoyNoirReduit.png) no-repeat;
+	background:url(../img/BoxBoyNoirReduit.png) no-repeat;
 	width: 60px;
 	height: 60px;
 }

@@ -20,7 +20,7 @@ class QuantikUIGenerator
     <head>
         <meta charset='UTF-8'>
         <title>$title</title>
-        <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />
+        <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/Quantikstyle.css\" />
         <link rel='icon' href='favicon.ico' />
     </head>
     <body>
