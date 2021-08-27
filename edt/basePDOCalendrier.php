@@ -32,19 +32,19 @@ class Calendrier {
   private static $_pdos_delete;
 
   /**
-   * PreparedStatement associé à un SELECT, calcule le nombre de categorie de la table
+   * PreparedStatement associé à un SELECT, calcule le nombre d'évènements de la table
    * @var PDOStatement;
    */
   private static $_pdos_count;
 
   /**
-   * PreparedStatement associé à un SELECT, récupère toutes les Categories
+   * PreparedStatement associé à un SELECT, récupère toutes les évènements
    * @var PDOStatement;
    */
   private static $_pdos_selectAll;
 
   /**
-   * Initialisation de la connexion et mémorisation de l'instance PDO dans Categorie::$_pdo
+   * Initialisation de la connexion et mémorisation de l'instance PDO dans calendrier::$_pdo
    */
   public static function initPDO() {
     self::$_pdo = new PDO("pgsql:host=postgresql-jul.alwaysdata.net;dbname=jul_edt", "jul", "Code:4815162342");
@@ -53,7 +53,7 @@ class Calendrier {
   }
 
   /**
-   * préparation de la requête SELECT * FROM Categorie
+   * préparation de la requête SELECT * FROM calendrier
    * instantiation de self::$_pdos_selectAll
    */
   public static function initPDOS_selectAll() {
@@ -61,35 +61,42 @@ class Calendrier {
   }
 
   /**
-   * méthode statique instanciant Categorie::$_pdo_select
+   * méthode statique instanciant calendrier::$_pdo_select
    */
   public static function initPDOS_select_jour() {
     self::$_pdos_select = self::$_pdo->prepare("SELECT * FROM calendrier WHERE heuredebut like :jour");
   }
 
   /**
-   * méthode statique instanciant Categorie::$_pdo_update
+   * méthode statique instanciant calendrier::$_pdo_select
+   */
+  public static function initPDOS_select_precis() {
+    self::$_pdos_select = self::$_pdo->prepare("SELECT * FROM calendrier WHERE titreevent=:titre AND heuredebut LIKE :heuredebut AND heurefin LIKE :heurefin");
+  }
+
+  /**
+   * méthode statique instanciant calendrier::$_pdo_update
    */
   public static function initPDOS_update() {
-    self::$_pdos_update =  self::$_pdo->prepare('UPDATE calendrier SET titreevent=:titre, heuredebut=:heuredebut, heurefin=:heurefin, isfullday=:isfullday, color=:color WHERE titreevent=:titre AND heuredebut=:heuredebut AND heurefin=:heurefin');
+    self::$_pdos_update =  self::$_pdo->prepare('UPDATE calendrier SET titreevent=:titre, heuredebut=:heuredebut, heurefin=:heurefin, isfullday=:isfullday, color=:color WHERE titreevent=:oldtitre AND heuredebut LIKE :oldheuredebut AND heurefin LIKE :oldheurefin');
   }
 
   /**
-   * méthode statique instanciant Categorie::$_pdo_insert
+   * méthode statique instanciant calendrier::$_pdo_insert
    */
   public static function initPDOS_insert() {
-    self::$_pdos_insert = self::$_pdo->prepare('INSERT INTO calendrier VALUES(:titre,:heuredebut,:heurefin,;isfullday,:color)');
+    self::$_pdos_insert = self::$_pdo->prepare('INSERT INTO calendrier VALUES(:titre,:heuredebut,:heurefin,:isfullday,:color)');
   }
 
   /**
-   * méthode statique instanciant fonction_prix::$_pdo_delete
+   * méthode statique instanciant calendrier::$_pdo_delete
    */
   public static function initPDOS_delete() {
-    self::$_pdos_delete = self::$_pdo->prepare('DELETE FROM calendrier WHERE titreevent:=titre AND heuredebut:=heuredebut AND heurefin:=heurefin AND isfullday:=isfullday AND color:=color');
+    self::$_pdos_delete = self::$_pdo->prepare('DELETE FROM calendrier WHERE titreevent=:titre AND heuredebut=:heuredebut AND heurefin=:heurefin AND isfullday=:isfullday');
   }
 
   /**
-   * préparation de la requête SELECT COUNT(*) FROM Categorie
+   * préparation de la requête SELECT COUNT(*) FROM calendrier
    * instantiation de self::$_pdos_count
    */
   public static function initPDOS_count() {
@@ -99,31 +106,27 @@ class Calendrier {
   }
 
   /**
-   * titre de la catégorie
+   * titre de l'évènement
    *   @var string
    */
   protected $titreevent;
 
   /**
-   * id du prix
    *   @var string
    */
   protected $heuredebut;
 
   /**
-   * id du prix
    *   @var string
    */
   protected $heurefin;
 
   /**
-   * id du prix
    *   @var bool
    */
   protected $isfullday;
 
   /**
-   * id du prix
    *   @var string
    */
   protected $color;
@@ -163,47 +166,46 @@ class Calendrier {
   }
 
   /**
-   * @return $this->heuredebut
+   * @return $this->heurefin
    */
   public function getheurefin() : string {
     return $this->heurefin;
   }
 
   /**
-   * @param $heuredebut
+   * @param $heurefin
    */
   public function setheurefin($heurefin): void {
     $this->heurefin=$heurefin;
   }
 
   /**
-   * @return $this->heuredebut
+   * @return $this->isfullday
    */
   public function getisfullday() : string {
     if($this->isfullday != 1) {
-      $this->isfullday = "false";
+      return "false";
     } else {
-      $this->isfullday = "true";
+      return "true";
     }
-    return $this->isfullday;
   }
 
   /**
-   * @param $heuredebut
+   * @param $isfull
    */
   public function setisfullday($isfull): void {
     $this->isfullday=$isfull;
   }
 
   /**
-   * @return $this->heuredebut
+   * @return $this->color
    */
   public function getcolor() : string {
     return $this->color;
   }
 
   /**
-   * @param $heuredebut
+   * @param $color
    */
   public function setcolor($color): void {
     $this->color=$color;
@@ -224,7 +226,7 @@ class Calendrier {
   }
 
   /**
-   * @return array un tableau de toutes les Categories
+   * @return array un tableau de toutes les évènements du calendrier
    */
   public static function getAll(): array {
     try {
@@ -233,7 +235,7 @@ class Calendrier {
       if (!isset(self::$_pdos_selectAll))
         self::initPDOS_selectAll();
       self::$_pdos_selectAll->execute();
-      // résultat du fetch dans une instance de Categorie
+      // résultat du fetch dans une instance de calendrier
       $lesCategories = self::$_pdos_selectAll->fetchAll(PDO::FETCH_CLASS,'Calendrier');
       return $lesCategories;
     }
@@ -244,9 +246,9 @@ class Calendrier {
   }
 
   /**
-   * initialisation d'un objet à partir d'un enregistrement de Categorie
-   * @param $id_jour un identifiant de Categorie
-   * @return l'instance de Categorie associée à $id_ceremonie
+   * initialisation d'un objet à partir d'un enregistrement de calendrier
+   * @param $jour un identifiant d'évènement du calendrier
+   * @return l'instance de calendrier associée à $jour
    */
   public static function initcalendrier_jour($jour) {
     try {
@@ -258,7 +260,34 @@ class Calendrier {
       self::$_pdos_select->bindValue(':jour',$jour);
       self::$_pdos_select->execute();
       // résultat du fetch dans une instance de calendrier
-      $lc = self::$_pdos_select->fetchAll(PDO::FETCH_CLASS,'Calendrier');
+      $lc = self::$_pdos_select->fetchObject('Calendrier');
+      return $lc;
+    }
+    catch (PDOException $e) {
+      print($e);
+    }
+  }
+
+  /**
+   * initialisation d'un objet à partir d'un enregistrement de calendrier
+   * @return l'instance de calendrier associée aux arguments
+   */
+  public static function initcalendrier_precis($titre, $heuredebut, $heurefin) {
+    try {
+      if (!isset(self::$_pdo))
+        self::initPDO();
+      if (!isset(self::$_pdos_select))
+        self::initPDOS_select_precis();
+      self::$_pdos_select->bindValue(':titre',$titre);
+      self::$_pdos_select->bindParam(':heuredebut', $heuredebut);
+      self::$_pdos_select->bindParam(':heurefin', $heurefin);
+      self::$_pdos_select->execute();
+      // résultat du fetch dans une instance de calendrier
+      $lc = self::$_pdos_select->fetchObject('Calendrier');
+      if (isset($lc) && ! empty($lc))
+        $lc->setNouveau(FALSE);
+      if (empty($lc))
+        throw new Exception("évènement $titre démarrant à $heuredebut inexistant dans la base.\n");
       return $lc;
     }
     catch (PDOException $e) {
@@ -271,7 +300,7 @@ class Calendrier {
    * soit on insère un nouvel objet
    * soit on le met à jour
    */
-  public function save() : void {
+  public function save($oldTitre = "", $oldHeureDebut = "", $oldHeureFin = "") : void {
     if (!isset(self::$_pdo))
       self::initPDO();
     if ($this->nouveau) {
@@ -289,11 +318,17 @@ class Calendrier {
     else {
       if (!isset(self::$_pdos_update))
         self::initPDOS_update();
+      if($oldTitre == "") {
+        echo 'attention aucun argument dans l\'appel à save()';
+      }
       self::$_pdos_update->bindParam(':titre', $this->titreevent);
       self::$_pdos_update->bindParam(':heuredebut', $this->heuredebut);
-      self::$_pdos_insert->bindParam(':heurefin', $this->heurefin);
-      self::$_pdos_insert->bindParam(':isfullday', $this->isfullday);
-      self::$_pdos_insert->bindParam(':color', $this->color);
+      self::$_pdos_update->bindParam(':heurefin', $this->heurefin);
+      self::$_pdos_update->bindParam(':isfullday', $this->isfullday);
+      self::$_pdos_update->bindParam(':color', $this->color);
+      self::$_pdos_update->bindParam(':oldtitre', $oldTitre);
+      self::$_pdos_update->bindParam(':oldheuredebut', $oldHeureDebut);
+      self::$_pdos_update->bindParam(':oldheurefin', $oldHeureFin);
       self::$_pdos_update->execute();
     }
   }
@@ -311,16 +346,18 @@ class Calendrier {
       }
       self::$_pdos_delete->bindParam(':titre', $this->titreevent);
       self::$_pdos_delete->bindParam(':heuredebut', $this->heuredebut);
-      self::$_pdos_insert->bindParam(':heurefin', $this->heurefin);
-      self::$_pdos_insert->bindParam(':isfullday', $this->isfullday);
-      self::$_pdos_insert->bindParam(':color', $this->color);
+      self::$_pdos_delete->bindParam(':heurefin', $this->heurefin);
+      if($this->isfullday == "") {
+        $this->isfullday = "FALSE";
+      }
+      self::$_pdos_delete->bindParam(':isfullday', $this->isfullday);
       self::$_pdos_delete->execute();
     }
     $this->setNouveau(TRUE);
   }
 
   /**
-   * nombre d'objets disponible dans la table
+   * nombre d'objets disponible dans la table calendrier
    */
   public static function getNbcalendrier() : int {
     if (!isset(self::$_pdos_count)) {
