@@ -22,6 +22,16 @@ if(isset($_POST['remove']) && !empty($_POST['remove'])) {
   $events->setcolor($_POST['maj']['color']);
   $events->setisfullday($_POST['maj']['allDay']);
   $events->save($titre, $heuredebut, $heurefin);
+} else if(isset($_POST['nouveau']) && !empty($_POST['nouveau'])) {
+  $events = new calendrier();
+  $events->settitreevent($_POST['nouveau']['title']);
+  $events->setheuredebut($_POST['nouveau']['start']);
+  $events->setheurefin($_POST['nouveau']['end']);
+  $events->setcolor($_POST['nouveau']['color']);
+  $events->setisfullday($_POST['nouveau']['allDay']);
+  $events->setNouveau(true);
+  echo $events;
+  $events->save();
 } else {
   $nouveau = new calendrier();
   $nouveau->settitreevent("new event");

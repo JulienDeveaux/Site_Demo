@@ -56,7 +56,7 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <form onsubmit="return traitement();">
-      <h1>Modifier l'évènement</h1>
+      <h1 id="titreModal"></h1>
       <h3>Titre</h3>
       <input type="text" name="titreEvent" id="titreEvent" required>
       <h3>Date</h3>
@@ -108,16 +108,51 @@
       eventStartEditable: true,
       eventResizableFromStart: true,
       eventDurationEditable: true,
+      customButtons: {
+        ajoutButton: {
+          text: 'Ajouter un évènement',
+          click: function () {
+            var modal = document.getElementById("myModal");
+            var span = document.getElementsByClassName("close")[0];
+              modal.style.display = "block";
+            span.onclick = function () {
+              modal.style.display = "none";
+            }
+            window.onclick = function (event) {
+              if (event.target === modal) {
+                modal.style.display = "none";
+              }
+            }
+            modal.style.display = "block";
+            document.getElementById("titreModal").innerHTML = "Ajouter un évènement";
+            // fin setup modal
+            // empty modal
+            document.getElementById("titreEvent").value = "";
+            document.getElementById("dateEventStart").value = "";
+            document.getElementById("dateEventEnd").value = "";
+            document.getElementById("heureEventStart").value = "";
+            document.getElementById("heureEventEnd").value = "";
+            document.getElementById("isFullDay").checked = false;
+            document.getElementById("heureEventStart").disabled = false;
+            document.getElementById("heureEventEnd").disabled = false;
+            document.getElementById("colorEvent").value = '#3788d8';
+          }
+        }
+      },
       headerToolbar: {
-        left: 'prev, next, today',
+        left: 'prev next ajoutButton',
         center: 'title',
-        right: 'dayGridMonth, timeGridWeek'
+        right: 'today dayGridMonth timeGridWeek timeGridDay'
       },
       buttonText: {
+        day: 'Jour',
         today: 'Aujourd\'hui',
         month: 'Mois',
         week: 'Semaine',
       },
+      firstDay: 1,
+      allDayText: 'Entier',
+      weekText: 'S',
       events: event,
       eventDragStop: (infos) => {
         if (!confirm("Etes vous sur de vouloir déplacer cet évènement ?")) {
@@ -140,6 +175,7 @@
           }
         }
         modal.style.display = "block";
+        document.getElementById("titreModal").innerHTML = "Modifier l'évènement";
         // fin setup modal
         // début mise à jour infos dans la modale
         document.getElementById("titreEvent").value = arg.event._def.title;
@@ -237,27 +273,39 @@
     var color = document.getElementById("colorEvent").value;
     var isFullDay = document.getElementById("isFullDay").checked;
 
-    var aMAJ = {
+    var nouveauEvent = {
       "title": titre,
       "start": dateStart + " " + heureStart,
       "end": dateEnd + " " + heureEnd,
       "color": color,
       "allDay": isFullDay
     };
-
-    var index = event.findIndex(x => x.title === eventClicked.title && x.start === eventClicked.start && x.end === eventClicked.end && x.allDay === eventClicked.allDay);
-    if (index > -1) {
-      event.splice(index, 1);
-      event.push(aMAJ);
-      $.ajax({ url: 'BDInteract.php',
-        data: { update: eventClicked, maj: aMAJ },
+    if(document.getElementById("titreModal").innerHTML === "Modifier l'évènement") {
+      var index = event.findIndex(x => x.title === eventClicked.title && x.start === eventClicked.start && x.end === eventClicked.end && x.allDay === eventClicked.allDay);
+      if (index > -1) {
+        event.splice(index, 1);
+        event.push(nouveauEvent);
+        $.ajax({
+          url: 'BDInteract.php',
+          data: {update: eventClicked, maj: nouveauEvent},
+          type: 'post',
+          success: function (out) {
+            console.log(out);
+          }
+        });
+      } else {
+        alert("élément non trouvé :(");
+      }
+    } else {
+      event.push(nouveauEvent);
+      $.ajax({
+        url: 'BDInteract.php',
+        data: {nouveau: nouveauEvent},
         type: 'post',
-        success: function(out) {
+        success: function (out) {
           console.log(out);
         }
       });
-    } else {
-      alert("élément non trouvé :(");
     }
     calendar.removeAllEvents();
     calendar.removeAllEventSources();
