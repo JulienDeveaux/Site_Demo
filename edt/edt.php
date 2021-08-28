@@ -10,9 +10,11 @@
   <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
 
+  <link href="../js/toastr/toastr.scss" rel="stylesheet">
   <link href='../js/fullcalendar/main.css' rel='stylesheet'/>
   <script src="../js/fullcalendar/main.js"></script>
   <script src="../js/jquery/jquery-3.6.0.js"></script>
+  <script src="../js/toastr/toastr.js"></script>
 </head>
 
 <body style="background-image: none; background-color: lightgray">
@@ -70,8 +72,8 @@
       &nbsp;
       <hr>
       <br>
-      <button type="submit" class="modalbutton">Valider</button>
-      <button type="button" id="DeleteAction" class="modalbutton" style="float: right">Supprimer</button>
+      <button type="button" id="DeleteAction" class="modalbutton">Supprimer</button>
+      <button type="submit" class="modalbutton" style="float: right">Valider</button>
     </form>
   </div>
 
@@ -232,11 +234,13 @@
         data: { remove: eventClicked },
         type: 'post',
         success: function(out) {
-          console.log(out);
+          if(out == "") {
+            toastr.success('Elément supprimé');
+          }
         }
       });
     } else {
-      alert("élément non trouvé :(");
+        toastr.error("élément non trouvé :(");
     }
     calendar.removeAllEvents();
     calendar.removeAllEventSources();
@@ -290,11 +294,13 @@
           data: {update: eventClicked, maj: nouveauEvent},
           type: 'post',
           success: function (out) {
-            console.log(out);
+          if(out == "") {
+            toastr.success('modification enregistrée');
+          }
           }
         });
       } else {
-        alert("élément non trouvé :(");
+        toastr.error("élément non trouvé :(");
       }
     } else {
       event.push(nouveauEvent);
@@ -303,7 +309,9 @@
         data: {nouveau: nouveauEvent},
         type: 'post',
         success: function (out) {
-          console.log(out);
+          if(out == "") {
+            toastr.success('Evènement enregistré');
+          }
         }
       });
     }

@@ -3,9 +3,7 @@ include 'basePDOCalendrier.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-session_start();
 if(isset($_POST['remove']) && !empty($_POST['remove'])) {
-  $_SESSION["remove"]=$_POST['remove'];
   $titre = $_POST['remove']['title'];
   $heuredebut = $_POST['remove']['start'] . "%";
   $heurefin = $_POST['remove']['end'] . "%";
@@ -30,7 +28,6 @@ if(isset($_POST['remove']) && !empty($_POST['remove'])) {
   $events->setcolor($_POST['nouveau']['color']);
   $events->setisfullday($_POST['nouveau']['allDay']);
   $events->setNouveau(true);
-  echo $events;
   $events->save();
 } else {
   $nouveau = new calendrier();
