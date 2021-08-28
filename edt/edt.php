@@ -189,11 +189,11 @@
 
         document.getElementById("heureEventStart").value =
           (((arg.event._instance.range.start.getHours() - 2 + "").length !== 2) ? "0" + (arg.event._instance.range.start.getHours() - 2) : arg.event._instance.range.start.getHours() - 2)
-          + ":" + (((arg.event._instance.range.start.getMinutes() + "" ).length !== 2) ? arg.event._instance.range.start.getMinutes() + "0" : arg.event._instance.range.start.getMinutes());
+          + ":" + (((arg.event._instance.range.start.getMinutes() + "" ).length !== 2) ? "0"+ arg.event._instance.range.start.getMinutes() : arg.event._instance.range.start.getMinutes());
         // ((arg.event._instance.range.start.getMinutes() + "" ).length !== 2) => le + "" s'assure que l'on à un string et non un number
         document.getElementById("heureEventEnd").value =
           (((arg.event._instance.range.end.getHours() - 2 + "").length !== 2) ? "0" + (arg.event._instance.range.end.getHours() - 2) : arg.event._instance.range.end.getHours() - 2)
-          + ":" + (((arg.event._instance.range.end.getMinutes() + "" ).length !== 2) ? arg.event._instance.range.end.getMinutes() + "0" : arg.event._instance.range.end.getMinutes());
+          + ":" + (((arg.event._instance.range.end.getMinutes() + "" ).length !== 2) ? "0" + arg.event._instance.range.end.getMinutes(): arg.event._instance.range.end.getMinutes());
 
         if (arg.event._def.allDay === true) {
           document.getElementById("isFullDay").checked = true;
