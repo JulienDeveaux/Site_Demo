@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Calendrier</title>
 
-  <link rel="manifest" href="site.webmanifest">
+  <link rel="manifest" href="../site.webmanifest">
   <link rel="icon" href="../favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
@@ -60,14 +60,14 @@
     <form onsubmit="return traitement();">
       <h1 id="titreModal"></h1>
       <h3>Titre</h3>
-      <input type="text" name="titreEvent" id="titreEvent" required>
+      <input type="text" id="titreEvent" required>
       <h3>Date</h3>
-      <h6>Du <input type="date" name="dateEventStart" id="dateEventStart" required> au <input type="date" name="dateEventEnd" id="dateEventEnd" required></h6>
+      <h6>Du <input type="date" id="dateEventStart" required> au <input type="date" id="dateEventEnd" required></h6>
       <h3>Heure</h3>
-      <h6>De <input type="time" name="heureEventStart" id="heureEventStart" minlength="5" maxlength="8" required> à
-        <input type="time" name="heureEventEnd" id="heureEventEnd" minlength="5" maxlength="8" required></h6>
-      <h3>Couleur <input type="color" name="colorEvent" id="colorEvent" required></h3>
-      <h3><input type="checkbox" name="isFullDay" id="isFullDay"> journée entière ?</h3>
+      <h6>De <input type="time" id="heureEventStart" minlength="5" maxlength="8" required> à
+        <input type="time" id="heureEventEnd" minlength="5" maxlength="8" required></h6>
+      <h3>Couleur <input type="color" id="colorEvent" required></h3>
+      <h3><input type="checkbox" id="isFullDay"> journée entière ?</h3>
       <p style="line-height: 5px;"></p>
       &nbsp;
       <hr>
@@ -76,7 +76,6 @@
       <button type="submit" class="modalbutton" style="float: right">Valider</button>
     </form>
   </div>
-
 </div>
 
 <div id="calendar"></div>
@@ -161,7 +160,7 @@
           infos.revert();
         }
       },
-      eventClick: function (arg) {
+      eventClick: function (arg) {                          // Appui sur un évènement -> remplissage de la modale pour être modifié ou supprimé
         var modal = document.getElementById("myModal");
         var btn = $(arg.el)[0];
         var span = document.getElementsByClassName("close")[0];
@@ -201,6 +200,10 @@
           document.getElementById("isFullDay").checked = true;
           document.getElementById("heureEventStart").disabled = true;
           document.getElementById("heureEventEnd").disabled = true;
+          document.getElementById("heureEventStart").value = "00:00";
+          document.getElementById("heureEventEnd").value = "00:00";
+          date.setDate(date.getDate() - 1);
+          document.getElementById("dateEventEnd").valueAsDate = date;
         } else {
           document.getElementById("isFullDay").checked = false;
           document.getElementById("heureEventStart").disabled = false;
@@ -234,7 +237,7 @@
         data: { remove: eventClicked },
         type: 'post',
         success: function(out) {
-          if(out == "") {
+          if(out === "") {
             toastr.success('Elément supprimé');
           }
         }
@@ -258,8 +261,8 @@
       document.getElementById("heureEventEnd").disabled = true;
       oldHeureStart = document.getElementById("heureEventStart").value;
       oldHeudEnd = document.getElementById("heureEventEnd").value;
-      document.getElementById("heureEventStart").value = "";
-      document.getElementById("heureEventEnd").value = "";
+      document.getElementById("heureEventStart").value = "00:00";
+      document.getElementById("heureEventEnd").value = "00:00";
     } else {
       document.getElementById("heureEventStart").disabled = false;
       document.getElementById("heureEventEnd").disabled = false;
@@ -268,7 +271,7 @@
     }
   });
 
-  function traitement() {
+  function traitement() {                           // s'exécute après un submit de la modale
     var titre = document.getElementById("titreEvent").value;
     var dateStart = $('#dateEventStart').val();
     var dateEnd = $('#dateEventEnd').val();
@@ -284,7 +287,7 @@
       "color": color,
       "allDay": isFullDay
     };
-    if(document.getElementById("titreModal").innerHTML === "Modifier l'évènement") {
+    if(document.getElementById("titreModal").innerHTML === "Modifier l'évènement") {            // on modifie un élément
       var index = event.findIndex(x => x.title === eventClicked.title && x.start === eventClicked.start && x.end === eventClicked.end && x.allDay === eventClicked.allDay);
       if (index > -1) {
         event.splice(index, 1);
@@ -294,7 +297,7 @@
           data: {update: eventClicked, maj: nouveauEvent},
           type: 'post',
           success: function (out) {
-          if(out == "") {
+          if(out === "") {
             toastr.success('modification enregistrée');
           }
           }
@@ -302,14 +305,14 @@
       } else {
         toastr.error("élément non trouvé :(");
       }
-    } else {
+    } else {                                                                                // on supprime un élément
       event.push(nouveauEvent);
       $.ajax({
         url: 'BDInteract.php',
         data: {nouveau: nouveauEvent},
         type: 'post',
         success: function (out) {
-          if(out == "") {
+          if(out === "") {
             toastr.success('Evènement enregistré');
           }
         }
