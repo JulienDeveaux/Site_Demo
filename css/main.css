@@ -76,19 +76,20 @@ nav {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    width: 25%;
     transform: translateX(100%);
     transition: transform 0.5s ease-in;
   }
   .nav-links li {
     opacity: 0;
+    text-align: center;
   }
   .MenuBar {
     display: block;
   }
 }
 
-@media (pointer: coarse) {
+@media (pointer: coarse) {            /*utilise un écran tactile*/
   body {
     overflow-x: hidden;
   }
@@ -101,12 +102,13 @@ nav {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    width: 25%;
     transform: translateX(100%);
     transition: transform 0.5s ease-in;
   }
   .nav-links li {
     opacity: 0;
+    text-align: center;
   }
   .MenuBar {
     display: block;
@@ -114,7 +116,8 @@ nav {
 }
 
 .nav-active {
-  transform: translateX(0%);
+  transform: translateX(0%);;
+  z-index: 3;
 }
 
 @keyframes navLinkFade {
@@ -144,9 +147,9 @@ nav {
   width: 100%;
   position: absolute;
   font-size: 9vw;
-  text: rgb(226, 226, 226);
   text-align: center;
-  margin-top: 25%;
+  margin-top: 25%;;
+  z-index: 0;
 }
 
 p {
